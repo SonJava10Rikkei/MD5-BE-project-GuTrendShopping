@@ -18,7 +18,6 @@ public class CategoryServiceIMPL implements ICategoryService {
     private ICategoryRepository categoryRepository;
     @Autowired
     private UserDetailService userDetailService;
-
     @Override
     public List<Category> findAll() {
         return categoryRepository.findAll();
@@ -36,12 +35,15 @@ public class CategoryServiceIMPL implements ICategoryService {
         return categoryRepository.findAll(pageable);
     }
 
-
     @Override
     public Optional<Category> findById(Long id) {
-        return Optional.empty();
+        return categoryRepository.findById(id);
     }
 
+    @Override
+    public void deleteById(Long id) {
+        categoryRepository.deleteById(id);
+    }
 
     @Override
     public Boolean existsByName(String name) {

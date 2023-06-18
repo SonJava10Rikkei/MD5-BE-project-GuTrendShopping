@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.OpenOption;
 import java.util.Optional;
 
 @RestController
@@ -25,14 +24,21 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id{")
+    @GetMapping("/{id}")
     public ResponseEntity<?> detailCategory(@PathVariable Long id) {
         Optional<Category> category = categoryService.findById(id);
         if (!category.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponMessage("id_does_not_exist"), HttpStatus.OK);
         }
-        return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
+
+
+    @GetMapping("/page")
+    public ResponseEntity<?> pageCategory(@PageableDefault(size = 3) Pageable pageable) {
+        return new ResponseEntity<>(categoryService.findAll(pageable), HttpStatus.OK);
+    }
+
 
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody Category category) {
@@ -43,11 +49,6 @@ public class CategoryController {
         return new ResponseEntity<>(new ResponMessage("success"), HttpStatus.OK);
     }
 
-    @GetMapping("/page")
-    public ResponseEntity<?> pageCategory(@PageableDefault(size = 3) Pageable pageable) {
-        return new ResponseEntity<>(categoryService.findAll(pageable), HttpStatus.OK);
-
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category) {
@@ -69,6 +70,17 @@ public class CategoryController {
         category.setId(category1.get().getId());
         categoryService.save(category);
         return new ResponseEntity<>(new ResponMessage("update_success"), HttpStatus.OK);
+    }
 
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        Optional<Category> category = categoryService.findById(id);
+        if (!category.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        categoryService.deleteById(id);
+        return new ResponseEntity<>(new ResponMessage("delete_success"), HttpStatus.OK);
     }
 }

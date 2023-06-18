@@ -11,4 +11,5 @@ public interface IGenericService<T> {
     void save(T t);
     Page<T> findAll(Pageable pageable);
     Optional<T> findById(Long id);
+    void deleteById(Long id);
 }
