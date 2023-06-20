@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "products")
@@ -15,22 +17,26 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor(force = true)
 
 public class Product {
-    @ManyToOne
-    User user;
-    @ManyToOne
-    Category category;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NonNull
+    @NotNull
     @Size(min = 3, max = 50)
     private String name;
+    @NotNull
+    private float price;
+    @NotNull
+    private int quantity;
+    @NotNull
     private String avatar = "https://firebasestorage.googleapis.com/v0/b/nguyendanhson-9374f.appspot.com/o/f4.jpg?alt=media&token=c30c42a6-b326-40a3-94ff-bfbb7e776521";
 
-    private float price;
+    @NotNull
+    private String description;
+    @ManyToOne
+    private User user;
+    @ManyToOne
+    private Category category;
 
-    private int quantity;
-    private int stock;
-    private int idCategory;
-
+    @Column(columnDefinition = "datetime default (now())")
+    private Date date = new Date();
 }
