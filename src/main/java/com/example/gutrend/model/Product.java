@@ -27,6 +27,8 @@ public class Product {
     private float price;
     @NotNull
     private int quantity;
+    @Column(columnDefinition = "datetime default (now())")
+    private Date date = new Date();
     @NotNull
     private String avatar = "https://firebasestorage.googleapis.com/v0/b/nguyendanhson-9374f.appspot.com/o/f4.jpg?alt=media&token=c30c42a6-b326-40a3-94ff-bfbb7e776521";
 
@@ -37,6 +39,13 @@ public class Product {
     @ManyToOne
     private Category category;
 
-    @Column(columnDefinition = "datetime default (now())")
-    private Date date = new Date();
+
+    public Product(String name, Category category, float price, int quantity, String avatar, String description) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.quantity = quantity;
+        this.avatar = avatar;
+        this.description = description;
+    }
 }
