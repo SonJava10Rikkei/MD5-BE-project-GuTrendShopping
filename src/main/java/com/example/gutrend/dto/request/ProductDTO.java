@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -12,16 +13,21 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ProductDTO {
     @NotNull
+    @NotBlank
     private String name;
     @NotNull
+
     private float price;
     @NotNull
+
     private int quantity;
 
     @NotNull
+    @NotBlank
     private String avatar;
 
     @NotNull
+    @NotBlank
     private String description;
 
     @NotNull
