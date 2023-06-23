@@ -47,4 +47,9 @@ public class ProductServiceIMPL implements IProductService {
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
+
+    @Override
+    public Boolean existsByName(String name) {
+        return productRepository.existsByName(name);
+    }
 }
