@@ -28,7 +28,7 @@ public class CategoryController {
     public ResponseEntity<?> detailCategory(@PathVariable Long id) {
         Optional<Category> category = categoryService.findById(id);
         if (!category.isPresent()) {
-            return new ResponseEntity<>(new ResponMessage("id_does_not_exist"), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponMessage("id_does_not_exist"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
@@ -40,21 +40,21 @@ public class CategoryController {
     }
 
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createCategory(@RequestBody Category category) {
         if (categoryService.existsByName(category.getName())) {
             return new ResponseEntity<>(new ResponMessage("name_exist"), HttpStatus.OK);
         }
         categoryService.save(category);
-        return new ResponseEntity<>(new ResponMessage("success"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponMessage("create_success"), HttpStatus.OK);
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category) {
         Optional<Category> category1 = categoryService.findById(id);
         if (!category1.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponMessage("id_does_not_exist"), HttpStatus.NOT_FOUND);
         }
         if (!category.getAvatar().equals(category1.get().getAvatar())) {
             category.setId(category1.get().getId());
@@ -74,11 +74,11 @@ public class CategoryController {
 
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         Optional<Category> category = categoryService.findById(id);
         if (!category.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponMessage("id_does_not_exist "),HttpStatus.NOT_FOUND);
         }
         categoryService.deleteById(id);
         return new ResponseEntity<>(new ResponMessage("delete_success"), HttpStatus.OK);

@@ -30,7 +30,6 @@ public class ProductServiceIMPL implements IProductService {
         User user = userDetailService.getCurrentUser();
         product.setUser(user);
         productRepository.save(product);
-
     }
 
     @Override
