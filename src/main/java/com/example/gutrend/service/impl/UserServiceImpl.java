@@ -1,11 +1,14 @@
 package com.example.gutrend.service.impl;
 
+import com.example.gutrend.model.Role;
 import com.example.gutrend.model.User;
 import com.example.gutrend.repository.IUserRepository;
 import com.example.gutrend.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,5 +33,34 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public String getUserRole(User user) {
+        String strRole = "USER";
+        List<Role> roleList = new ArrayList<>();
+        user.getRoles().forEach(role -> {
+            roleList.add(role);
+        });
+        for (int i = 0; i < roleList.size(); i++) {
+            if (roleList.get(i).getName().name().equals("ADMIN")){
+                strRole= "ADMIN";
+                return strRole;
+            }
+            if (roleList.get(i).getName().name().equals("PM")){
+                strRole="PM";
+            }
+        }
+        return strRole;
+    }
+
+    @Override
+    public Optional<User> findByUserId(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }
