@@ -50,6 +50,18 @@ public class AuthController {
     JwtTokenFilter jwtTokenFilter;
     @Autowired
     private UserDetailService userDetailService;
+    @GetMapping("/list-user")
+    public ResponseEntity<?> getListUser(){
+        return new ResponseEntity<>(userService.findAll(),HttpStatus.OK);
+    }
+    @GetMapping("/detail-user/{id}")
+    public ResponseEntity<?> detailUserById(@PathVariable Long id){
+        Optional<User> user = userService.findByUserId(id);
+        if (!user.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user,HttpStatus.OK);
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@Valid @RequestBody SignUpForm signUpForm) {
