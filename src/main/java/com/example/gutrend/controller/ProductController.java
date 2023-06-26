@@ -48,8 +48,8 @@ public class ProductController {
             Product product = new Product(
                     productDTO.getName(), productDTO.getCategory(),
                     productDTO.getPrice(), productDTO.getQuantity(),
-                    productDTO.getAvatar(), productDTO.getDescription(),
-                    productDTO.getSizeColumnList());
+                    productDTO.getAvatar(), productDTO.getDescription()
+                   );
             productService.save(product);
             return new ResponseEntity<>(new ResponMessage("create_success"), HttpStatus.OK);
         }
@@ -66,7 +66,6 @@ public class ProductController {
         boolean checkName = product.getName().equals(product1.get().getName());
         boolean checkQuantity = product.getQuantity() == (product1.get().getQuantity());
         boolean checkPrice = product.getPrice() == (product1.get()).getPrice();
-        boolean checkSizeColumn = false;
         boolean checkCategory = false;
         if (!checkAvatar) {
             product.setId(product1.get().getId());
@@ -79,25 +78,13 @@ public class ProductController {
         if (product.getCategory().getId().longValue() == product1.get().getCategory().getId().longValue()) {
             checkCategory = true;
         }
-        for (int i = 0; i < product.getSizeColumnList().size(); i++) {
-
-            if (product.getSizeColumnList().get(i).getId().longValue() == (product1.get().getSizeColumnList().get(i).getId().longValue())
-            ) {
-                checkSizeColumn = true;
-
-            } else {
-                checkSizeColumn = false;
-                break;
-            }
-        }
-
         if (checkName
                 && checkAvatar
                 && checkCategory
                 && checkPrice
                 && checkQuantity
                 && checkDescription
-                && checkSizeColumn
+
         ) {
             return new ResponseEntity<>(new ResponMessage("no_change"), HttpStatus.OK);
         }
@@ -111,7 +98,6 @@ public class ProductController {
         Optional<Product> product = productService.findById(id);
         if (!product.isPresent()) {
             return new ResponseEntity<>(new ResponMessage("id_does_not_exist "), HttpStatus.NOT_FOUND);
-
         }
         productService.deleteById(id);
         return new ResponseEntity<>(new ResponMessage("delete_success"), HttpStatus.OK);

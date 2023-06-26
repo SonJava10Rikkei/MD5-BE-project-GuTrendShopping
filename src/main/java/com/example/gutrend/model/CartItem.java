@@ -9,6 +9,7 @@ import org.hibernate.annotations.ManyToAny;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cartitem")
@@ -16,16 +17,18 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor()
 public class CartItem {
-    @ManyToOne
-    private User user;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     private int quantity;
 
-    @Temporal(TemporalType.DATE)
-    private Date date;
+
     @ManyToOne
     private Product product;
+
+
+
 }

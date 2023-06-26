@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,38 +22,17 @@ public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Temporal(TemporalType.DATE)
-    private Date date;
 
     @Transient
-    private Double totalPrice;
+    private int totalNumberItems;
+    @Transient
+    private Double totalPriceItems;
 
     @Transient
-    private int itemsNumber;
+    private Order order;
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(name = "cartItemOfShopingCart",joinColumns = @JoinColumn(name = "shoppingCartId"),inverseJoinColumns = @JoinColumn(name = "CartItemId"))
+    private List<CartItem> cartItemList;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Collection<CartItem> ItemsCartSet;
-
-    private String tokenSession;
-
-    public Double getTotalPrice() {
-        Double sum = 0.0;
-        for (CartItem cartItem : this.ItemsCartSet) {
-            sum = sum + cartItem.getProduct().getPrice();
-        }
-        return sum;
-    }
-
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public int getItemsNumber() {
-        return this.ItemsCartSet.size();
-    }
-
-    public void setItemsNumber(int itemsNumber) {
-        this.itemsNumber = itemsNumber;
-    }
 
 }

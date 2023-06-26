@@ -1,7 +1,7 @@
 package com.example.gutrend.dto.request;
 
 import com.example.gutrend.model.Category;
-import com.example.gutrend.model.SizeColumn;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +35,6 @@ public class ProductDTO {
 
     @NotNull
     private Category category;
-    @NotNull
-    private List<SizeColumn> sizeColumnList = new ArrayList<>();
+
 
 }

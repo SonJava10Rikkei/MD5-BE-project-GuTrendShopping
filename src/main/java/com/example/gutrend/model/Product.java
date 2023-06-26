@@ -40,30 +40,17 @@ public class Product {
     private User user;
     @ManyToOne
     private Category category;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "product_size", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "sizecolumn_id"))
-    private List<SizeColumn> sizeColumnList = new ArrayList<>();
 
 
-    public Product(String name, Category category, float price, int quantity, String avatar, String description, List<SizeColumn> sizeColumnList) {
+
+    public Product(String name, Category category, float price, int quantity, String avatar, String description) {
         this.name = name;
         this.category = category;
         this.price = price;
         this.quantity = quantity;
         this.avatar = avatar;
         this.description = description;
-        this.sizeColumnList = sizeColumnList;
+
     }
 
-//    public int getQuantity() {
-//        int sum = 0;
-//        for (int i = 0; i < sizeColumnList.size(); i++) {
-//            sum += sizeColumnList.get(i).getQuantitySize();
-//        }
-//        return sum;
-//    }
-//
-//    public void setQuantity(int quantity) {
-//        this.quantity = quantity;
-//    }
 }

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IOrderRepository extends JpaRepository<Order,Long> {
-//    Boolean existsByName(String name);
+
 }

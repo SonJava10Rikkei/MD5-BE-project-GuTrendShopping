@@ -32,7 +32,6 @@ public class OrderServiceIPML implements IOrderService{
         orderRepository.save(order);
     }
 
-
     @Override
     public Page<Order> findAll(Pageable pageable) {
         return orderRepository.findAll(pageable);
@@ -48,9 +47,4 @@ public class OrderServiceIPML implements IOrderService{
         orderRepository.deleteById(id);
     }
 
-
-//    @Override
-//    public Boolean existsByName(String name) {
-//        return orderRepository.existsByName(name);
-//    }
 }
