@@ -39,6 +39,7 @@ public class User {
     @Size(min = 6, max = 100)
     private String password;
     private Boolean status = false;
+
     @Lob
     private String avatar = "https://firebasestorage.googleapis.com/v0/b/nguyendanhson-9374f.appspot.com/o/avatar-default.png?alt=media&token=c82ef303-7706-453a-9aef-5850cfb0a31b";
     @ManyToMany(fetch = FetchType.EAGER)

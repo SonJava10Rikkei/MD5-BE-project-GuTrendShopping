@@ -50,17 +50,19 @@ public class AuthController {
     JwtTokenFilter jwtTokenFilter;
     @Autowired
     private UserDetailService userDetailService;
+
     @GetMapping("/list-user")
-    public ResponseEntity<?> getListUser(){
-        return new ResponseEntity<>(userService.findAll(),HttpStatus.OK);
+    public ResponseEntity<?> getListUser() {
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
+
     @GetMapping("/detail-user/{id}")
-    public ResponseEntity<?> detailUserById(@PathVariable Long id){
+    public ResponseEntity<?> detailUserById(@PathVariable Long id) {
         Optional<User> user = userService.findByUserId(id);
-        if (!user.isPresent()){
+        if (!user.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/signup")
@@ -97,18 +99,18 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> login(@Valid @RequestBody SignInForm signInForm){
+    public ResponseEntity<?> login(@Valid @RequestBody SignInForm signInForm) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInForm.getUsername(), signInForm.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.createToken(authentication);
         String username = jwtProvider.getUerNameFromToken(token);
-        User user = userService.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("user name not fond"));
-        if (user.getStatus()){
-            return new ResponseEntity<>(new ResponMessage("login_denied"),HttpStatus.UNAUTHORIZED);
+        User user = userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("user name not fond"));
+        if (user.getStatus()) {
+            return new ResponseEntity<>(new ResponMessage("login_denied"), HttpStatus.UNAUTHORIZED);
         }
         UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-        return ResponseEntity.ok(new JwtResponse(token, userPrinciple.getName(),userPrinciple.getAvatar(), userPrinciple.getAuthorities()));
+        return ResponseEntity.ok(new JwtResponse(token, userPrinciple.getName(), userPrinciple.getAvatar(), userPrinciple.getAuthorities()));
     }
 
     @PutMapping("/change-avatar")
@@ -155,22 +157,25 @@ public class AuthController {
         } else {
             User user1 = userDetailService.getCurrentUser();
             role = userService.getUserRole(user1);
-            if (role.equals("ADMIN")) {
-                return new ResponseEntity<>(new ResponMessage("access_is_denied"), HttpStatus.OK);
+            if (!role.equals("ADMIN")) {
+                return new ResponseEntity<>(new ResponMessage("access_denied"), HttpStatus.OK);
             } else {
-                if (userService.getUserRole(user.get()).equals("USER")) {
-                    Role pmRole = roleService.findByName(RoleName.PM).orElseThrow(() -> new RuntimeException("Role not found"));
-                    roles.add(pmRole);
+                if (userService.getUserRole(user.get()).equals("ADMIN")) {
+                    return new ResponseEntity<>(new ResponMessage("can't_change_admin_role"), HttpStatus.OK);
+                } else {
+                    if (userService.getUserRole(user.get()).equals("USER")) {
+                        Role pmRole = roleService.findByName(RoleName.PM).orElseThrow(() -> new RuntimeException("Role not found"));
+                        roles.add(pmRole);
+                    }
+                    if (userService.getUserRole(user.get()).equals("PM")) {
+                        Role userRole = roleService.findByName(RoleName.USER).orElseThrow(() -> new RuntimeException("Role not found"));
+                        roles.add(userRole);
+                    }
+                    user.get().setRoles(roles);
+                    userService.save(user.get());
+                    return new ResponseEntity<>(new ResponMessage("update_success"), HttpStatus.OK);
                 }
-                if (userService.getUserRole(user.get()).equals("PM")) {
-                    Role userRole = roleService.findByName(RoleName.USER).orElseThrow(() -> new RuntimeException("Role not found"));
-                    roles.add(userRole);
-                }
-                user.get().setRoles(roles);
-                userService.save(user.get());
-                return new ResponseEntity<>(new ResponMessage("update_success"), HttpStatus.OK);
             }
-
         }
     }
 
@@ -194,9 +199,6 @@ public class AuthController {
             return new ResponseEntity<>(new ResponMessage("update_success"), HttpStatus.OK);
         }
     }
-
-
-
 
 
 }
